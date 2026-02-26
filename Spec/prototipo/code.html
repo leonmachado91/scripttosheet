@@ -1,0 +1,484 @@
+<!DOCTYPE html><html class="dark" lang="pt-BR"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Grade de Conhecimento Gruvbox PT-BR</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "gruv-bg-hard": "#1d2021",
+                        "gruv-bg": "#282828",
+                        "gruv-bg-soft": "#32302f",
+                        "gruv-fg": "#ebdbb2",
+                        "gruv-fg0": "#fbf1c7",
+                        "gruv-fg2": "#d5c4a1",
+                        "gruv-fg4": "#a89984",
+                        "gruv-gray": "#928374",
+                        "gruv-red": "#cc241d",
+                        "gruv-green": "#98971a",
+                        "gruv-yellow": "#d79921",
+                        "gruv-blue": "#458588",
+                        "gruv-purple": "#b16286",
+                        "gruv-aqua": "#689d6a",
+                        "gruv-orange": "#d65d0e",
+                        "primary": "#d79921",
+                        "background-light": "#fbf1c7",
+                        "background-dark": "#1d2021",
+                    },
+                    fontFamily: {
+                        "mono": ["JetBrains Mono", "monospace"],
+                        "display": ["JetBrains Mono", "monospace"],
+                        "sans": ["JetBrains Mono", "monospace"],
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.125rem", 
+                        "lg": "0.25rem", 
+                        "xl": "0.5rem", 
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'JetBrains Mono', monospace;
+        }::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #1d2021;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #504945;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #665c54;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-gruv-fg overflow-hidden h-screen flex">
+<aside class="w-64 bg-gruv-bg border-r border-gruv-bg-soft flex flex-col h-full shrink-0">
+<div class="p-4 border-b border-gruv-bg-soft">
+<div class="flex items-center gap-3">
+<div class="bg-center bg-no-repeat bg-cover rounded-lg h-10 w-10 shrink-0 border border-gruv-fg4/20" data-alt="User profile avatar gradient" style="background-image: url(&quot;https://lh3.googleusercontent.com/aida-public/AB6AXuD3rLsM6aOgqwmVNBdAP7wsXO6uzRE_6zsFuDRMiVc4oEb54WV08Uww9Xi4g19wb8G4f1r7igrtzln5te3VMMLLLvKhkdotE1sS95YF1PVmOauDvMDEYOh0anq8te9uHK4nzt695r_QfVelkZ1FLZpAYiwPBnnFaRUKOWygCuFpeS-ytiqAh4PzLs2btwD-nSvmHblj3x1L6x5tiQnAXvCZlpJBBGaCsY4xEDgJ8RpqF0cvSkX6JowryhjhSWSwdPWu_Pac_V7_RKc&quot;&quot;);"></div>
+<div class="flex flex-col overflow-hidden">
+<h1 class="text-gruv-fg0 text-sm font-bold truncate" style="">ScripttoSheet</h1>
+<p class="text-gruv-gray text-xs truncate" style="">História Islâmica</p>
+</div>
+</div>
+</div>
+<nav class="flex-1 overflow-y-auto py-4 px-2 flex flex-col gap-1">
+<a class="flex items-center gap-3 px-3 py-2 rounded bg-gruv-bg-soft text-gruv-fg0 border border-gruv-bg-soft" href="#" style="">
+<span class="material-symbols-outlined text-gruv-yellow text-[20px]" style="">description</span>
+<span class="text-sm font-medium" style="">Rotiero 1</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gruv-bg-soft/50 text-gruv-fg4 hover:text-gruv-fg2 transition-colors" href="#" style="">
+<span class="material-symbols-outlined text-[20px]" style="">book</span>
+<span class="text-sm font-medium" style="">Roteiro 2</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gruv-bg-soft/50 text-gruv-fg4 hover:text-gruv-fg2 transition-colors" href="#" style="">
+<span class="material-symbols-outlined text-[20px]" style="">folder</span>
+<span class="text-sm font-medium" style="">Roteiro 3</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gruv-bg-soft/50 text-gruv-fg4 hover:text-gruv-fg2 transition-colors" href="#" style="">
+<span class="material-symbols-outlined text-[20px]" style="">layers</span>
+<span class="text-sm font-medium" style="">Roteiro 4</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 rounded hover:bg-gruv-bg-soft/50 text-gruv-fg4 hover:text-gruv-fg2 transition-colors" href="#" style="">
+<span class="material-symbols-outlined text-[20px]" style="">archive</span>
+<span class="text-sm font-medium" style="">Roteiro 5</span>
+</a>
+<div class="mt-4 pt-4 border-t border-gruv-bg-soft px-3">
+<p class="text-xs font-bold text-gruv-gray uppercase tracking-wider mb-2" style="">FAVORITOS</p>
+<a class="flex items-center gap-2 py-1.5 text-gruv-fg4 hover:text-gruv-fg2" href="#" style="">
+<span class="w-2 h-2 rounded-full bg-gruv-red"></span>
+<span class="text-xs truncate" style="">Specs Projeto Phoenix</span>
+</a>
+<a class="flex items-center gap-2 py-1.5 text-gruv-fg4 hover:text-gruv-fg2" href="#" style="">
+<span class="w-2 h-2 rounded-full bg-gruv-aqua"></span>
+<span class="text-xs truncate" style="">Configuração Vim</span>
+</a>
+<a class="flex items-center gap-2 py-1.5 text-gruv-fg4 hover:text-gruv-fg2" href="#" style="">
+<span class="w-2 h-2 rounded-full bg-gruv-purple"></span>
+<span class="text-xs truncate" style="">Metas Q4</span>
+</a>
+</div>
+</nav>
+<div class="p-4 border-t border-gruv-bg-soft flex flex-col gap-2">
+<button class="flex w-full items-center justify-center gap-2 rounded bg-gruv-yellow text-gruv-bg font-bold py-2 text-sm hover:bg-gruv-yellow/90 transition-colors" style="">
+<span class="material-symbols-outlined text-[18px]" style="">add</span>
+<span class="" style="">Novo&nbsp;Projeto</span>
+</button>
+</div>
+</aside>
+<main class="flex-1 flex flex-col min-w-0 bg-gruv-bg-hard">
+<header class="flex items-center justify-between border-b border-gruv-bg-soft px-6 py-3 bg-gruv-bg-hard/95 backdrop-blur-sm sticky top-0 z-10">
+<div class="flex items-center gap-4">
+<div class="text-gruv-yellow">
+<span class="material-symbols-outlined text-[24px]" style="">grid_view</span>
+</div>
+<h2 class="text-gruv-fg0 text-lg font-bold tracking-tight" style="">Grade de Conhecimento</h2>
+<div class="hidden md:flex items-center gap-2 ml-4 text-sm text-gruv-gray border-l border-gruv-bg-soft pl-4">
+<a class="hover:text-gruv-fg2 transition-colors" href="#" style="">Projetos</a>
+<span class="" style="">/</span>
+<span class="text-gruv-fg" style="">Roteiro 1</span>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="relative group">
+<div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-gruv-gray">
+<span class="material-symbols-outlined text-[20px]" style="">search</span>
+</div>
+<input class="bg-gruv-bg border border-gruv-bg-soft text-gruv-fg text-sm rounded focus:ring-1 focus:ring-gruv-yellow focus:border-gruv-yellow block w-64 pl-10 p-2 placeholder-gruv-gray transition-all" placeholder="Buscar cenas..." type="text">
+<div class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
+<kbd class="inline-flex items-center border border-gruv-bg-soft rounded px-1.5 text-xs font-sans font-medium text-gruv-gray">⌘K</kbd>
+</div>
+</div>
+<div class="flex items-center gap-2 border-l border-gruv-bg-soft pl-4">
+<button aria-label="Notificações" class="p-2 text-gruv-gray hover:text-gruv-yellow hover:bg-gruv-bg rounded transition-colors relative" style="">
+<span class="material-symbols-outlined text-[20px]" style="">notifications</span>
+<span class="absolute top-1.5 right-1.5 w-2 h-2 bg-gruv-red rounded-full border border-gruv-bg-hard"></span>
+</button>
+<button aria-label="Configurações" class="p-2 text-gruv-gray hover:text-gruv-fg transition-colors hover:bg-gruv-bg rounded" style="">
+<span class="material-symbols-outlined text-[20px]" style="">settings</span>
+</button>
+<button aria-label="Sincronizar" class="p-2 text-gruv-gray hover:text-gruv-fg transition-colors hover:bg-gruv-bg rounded" style="">
+<span class="material-symbols-outlined text-[20px]" style="">sync</span>
+</button>
+</div>
+</div>
+</header>
+<div class="flex flex-wrap gap-3 px-6 py-4 border-b border-gruv-bg-soft bg-gruv-bg-hard items-center">
+<div class="flex items-center bg-gruv-bg rounded border border-gruv-bg-soft p-1">
+<button class="px-3 py-1.5 rounded text-xs font-bold bg-gruv-bg-soft text-gruv-fg0 shadow-sm" style="">
+                    Tabela
+                </button>
+<button class="px-3 py-1.5 rounded text-xs font-medium text-gruv-gray hover:text-gruv-fg2 transition-colors" style="">
+                    Lista
+                </button>
+<button class="px-3 py-1.5 rounded text-xs font-medium text-gruv-gray hover:text-gruv-fg2 transition-colors" style="">
+                    Kanban
+                </button>
+</div>
+<div class="h-6 w-px bg-gruv-bg-soft mx-1"></div>
+<button class="flex items-center gap-2 px-3 py-1.5 rounded border border-gruv-bg-soft bg-gruv-bg hover:bg-gruv-bg-soft transition-colors text-gruv-fg4 text-xs font-medium" style="">
+<span class="material-symbols-outlined text-[16px]" style="">filter_list</span>
+                Filtrar
+            </button>
+<button class="flex items-center gap-2 px-3 py-1.5 rounded border border-gruv-bg-soft bg-gruv-bg hover:bg-gruv-bg-soft transition-colors text-gruv-fg4 text-xs font-medium" style="">
+<span class="material-symbols-outlined text-[16px]" style="">sort</span>
+                Ordenar
+            </button>
+<button class="flex items-center gap-2 px-3 py-1.5 rounded border border-gruv-bg-soft bg-gruv-bg hover:bg-gruv-bg-soft transition-colors text-gruv-fg4 text-xs font-medium" style="">
+<span class="material-symbols-outlined text-[16px]" style="">label</span>
+                Tags
+            </button>
+<div class="flex-1"></div>
+<span class="text-xs text-gruv-gray font-mono" style="">245 notas</span>
+<button class="flex items-center gap-2 px-3 py-1.5 rounded border border-gruv-bg-soft bg-gruv-bg hover:bg-gruv-bg-soft transition-colors text-gruv-fg4 text-xs font-medium" style="">
+<span class="material-symbols-outlined text-[16px]" style="">file_download</span>
+                Exportar
+            </button>
+</div>
+<div class="flex-1 overflow-auto p-6 flex gap-6">
+<div class="flex-1 min-w-0">
+<div class="rounded-lg border border-gruv-bg-soft overflow-hidden bg-gruv-bg shadow-sm">
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse min-w-[800px]">
+<thead>
+<tr class="bg-gruv-bg-soft border-b border-gruv-bg-soft text-xs uppercase tracking-wider text-gruv-gray font-bold">
+<th class="px-6 py-3 font-medium w-1/4" style="">TÍTULO DA NOTA</th>
+<th class="px-6 py-3 font-medium w-40" style="">ROTEIRO</th>
+<th class="px-6 py-3 font-medium w-40" style="">COMENTÁRIO</th>
+<th class="px-6 py-3 font-medium w-1/6" style="">TAGS</th>
+<th class="px-6 py-3 font-medium w-24" style="">STATUS</th>
+<th class="px-6 py-3 font-medium w-24" style="">Ordem</th>
+<th class="px-4 py-3 w-10" style=""></th>
+</tr>
+</thead>
+<tbody class="divide-y divide-gruv-bg-soft text-sm">
+<tr class="group bg-gruv-bg-soft border-l-2 border-l-gruv-yellow cursor-pointer">
+<td class="px-6 py-4" style="">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-gruv-blue text-[18px]" style="">description</span>
+<span class="font-bold text-gruv-fg0" style="">Cena 1</span>
+</div>
+</td>
+<td class="px-6 py-4 text-gruv-fg4 truncate max-w-[150px]" style="">Introdução, Práticas...</td>
+<td class="px-6 py-4 text-gruv-fg4 truncate max-w-[150px]" style="">Revisar capítulo 4</td>
+<td class="px-6 py-4" style="">
+<div class="flex flex-wrap gap-1.5">
+<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gruv-aqua/20 text-gruv-aqua border border-gruv-aqua/30" style="">#dev</span>
+<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gruv-green/20 text-gruv-green border border-gruv-green/30" style="">#clean-code</span>
+</div>
+</td>
+<td class="px-6 py-4" style="">
+<span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold bg-gruv-green text-gruv-bg shadow-sm" style="">
+                                            Concluído
+                                        </span>
+</td>
+<td class="px-6 py-4 text-gruv-gray font-mono text-xs" style="">1</td>
+<td class="px-4 py-4 text-right" style="">
+<button class="text-gruv-gray hover:text-gruv-fg transition-opacity" style="">
+<span class="material-symbols-outlined text-[18px]" style="">chevron_right</span>
+</button>
+</td>
+</tr>
+<tr class="group bg-gruv-bg-soft/30 hover:bg-gruv-bg-soft/50 transition-colors">
+<td class="px-6 py-4" style="">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-gruv-orange text-[18px]" style="">warning</span>
+<span class="font-bold text-gruv-fg0 group-hover:text-gruv-yellow transition-colors cursor-pointer" style="">Cena 2</span>
+</div>
+</td>
+<td class="px-6 py-4 text-gruv-fg4 truncate max-w-[150px]" style="">Definir escopo, MVP...</td>
+<td class="px-6 py-4 text-gruv-fg4 truncate max-w-[150px]" style="">Aguardando aprovação</td>
+<td class="px-6 py-4" style="">
+<div class="flex flex-wrap gap-1.5">
+<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gruv-red/20 text-gruv-red border border-gruv-red/30" style="">#urgente</span>
+<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gruv-yellow/20 text-gruv-yellow border border-gruv-yellow/30" style="">#planejamento</span>
+</div>
+</td>
+<td class="px-6 py-4" style="">
+<span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold bg-gruv-orange text-gruv-bg shadow-sm" style="">
+                                            Em Andamento
+                                        </span>
+</td>
+<td class="px-6 py-4 text-gruv-gray font-mono text-xs" style="">2</td>
+<td class="px-4 py-4 text-right" style="">
+<button class="text-gruv-gray hover:text-gruv-fg opacity-0 group-hover:opacity-100 transition-opacity" style="">
+<span class="material-symbols-outlined text-[18px]" style="">more_horiz</span>
+</button>
+</td>
+</tr>
+<tr class="group hover:bg-gruv-bg-soft/50 transition-colors">
+<td class="px-6 py-4" style="">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-gruv-purple text-[18px]" style="">auto_stories</span>
+<span class="font-bold text-gruv-fg0 group-hover:text-gruv-yellow transition-colors cursor-pointer" style="">Cena 3</span>
+</div>
+</td>
+<td class="px-6 py-4 text-gruv-fg4 truncate max-w-[150px]" style="">Log de atividades...</td>
+<td class="px-6 py-4 text-gruv-fg4 truncate max-w-[150px]" style="">Semana produtiva</td>
+<td class="px-6 py-4" style="">
+<div class="flex flex-wrap gap-1.5">
+<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gruv-purple/20 text-gruv-purple border border-gruv-purple/30" style="">#diário</span>
+</div>
+</td>
+<td class="px-6 py-4" style="">
+<span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold bg-gruv-green text-gruv-bg shadow-sm" style="">
+                                            Concluído
+                                        </span>
+</td>
+<td class="px-6 py-4 text-gruv-gray font-mono text-xs" style="">3</td>
+<td class="px-4 py-4 text-right" style="">
+<button class="text-gruv-gray hover:text-gruv-fg opacity-0 group-hover:opacity-100 transition-opacity" style="">
+<span class="material-symbols-outlined text-[18px]" style="">more_horiz</span>
+</button>
+</td>
+</tr>
+<tr class="group hover:bg-gruv-bg-soft/50 transition-colors">
+<td class="px-6 py-4" style="">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-gruv-aqua text-[18px]" style="">code</span>
+<span class="font-bold text-gruv-fg0 group-hover:text-gruv-yellow transition-colors cursor-pointer" style="">Cena 4</span>
+</div>
+</td>
+<td class="px-6 py-4 text-gruv-fg4 truncate max-w-[150px]" style="">Comandos normais, insert...</td>
+<td class="px-6 py-4 text-gruv-fg4 truncate max-w-[150px]" style="">Memorizar :w e :q!</td>
+<td class="px-6 py-4" style="">
+<div class="flex flex-wrap gap-1.5">
+<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gruv-green/20 text-gruv-green border border-gruv-green/30" style="">#produtividade</span>
+<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gruv-aqua/20 text-gruv-aqua border border-gruv-aqua/30" style="">#vim</span>
+</div>
+</td>
+<td class="px-6 py-4" style="">
+<span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold bg-gruv-blue text-gruv-bg shadow-sm" style="">
+                                            Revisar
+                                        </span>
+</td>
+<td class="px-6 py-4 text-gruv-gray font-mono text-xs" style="">4</td>
+<td class="px-4 py-4 text-right" style="">
+<button class="text-gruv-gray hover:text-gruv-fg opacity-0 group-hover:opacity-100 transition-opacity" style="">
+<span class="material-symbols-outlined text-[18px]" style="">more_horiz</span>
+</button>
+</td>
+</tr>
+<tr class="group hover:bg-gruv-bg-soft/50 transition-colors">
+<td class="px-6 py-4" style="">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-gruv-blue text-[18px]" style="">library_books</span>
+<span class="font-bold text-gruv-fg0 group-hover:text-gruv-yellow transition-colors cursor-pointer" style="">Cena 5</span>
+</div>
+</td>
+<td class="px-6 py-4 text-gruv-fg4 truncate max-w-[150px]" style="">useEffect, useState...</td>
+<td class="px-6 py-4 text-gruv-fg4 truncate max-w-[150px]" style="">Atualizar com React 18</td>
+<td class="px-6 py-4" style="">
+<div class="flex flex-wrap gap-1.5">
+<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gruv-aqua/20 text-gruv-aqua border border-gruv-aqua/30" style="">#react</span>
+<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gruv-blue/20 text-gruv-blue border border-gruv-blue/30" style="">#frontend</span>
+</div>
+</td>
+<td class="px-6 py-4" style="">
+<span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold bg-gruv-yellow text-gruv-bg shadow-sm" style="">
+                                            Rascunho
+                                        </span>
+</td>
+<td class="px-6 py-4 text-gruv-gray font-mono text-xs" style="">5</td>
+<td class="px-4 py-4 text-right" style="">
+<button class="text-gruv-gray hover:text-gruv-fg opacity-0 group-hover:opacity-100 transition-opacity" style="">
+<span class="material-symbols-outlined text-[18px]" style="">more_horiz</span>
+</button>
+</td>
+</tr>
+<tr class="group hover:bg-gruv-bg-soft/50 transition-colors">
+<td class="px-6 py-4" style="">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-gruv-fg4 text-[18px]" style="">mic</span>
+<span class="font-bold text-gruv-fg0 group-hover:text-gruv-yellow transition-colors cursor-pointer" style="">Cena 6</span>
+</div>
+</td>
+<td class="px-6 py-4 text-gruv-fg4 truncate max-w-[150px]" style="">Pontos de ação...</td>
+<td class="px-6 py-4 text-gruv-fg4 truncate max-w-[150px]" style="">Enviar email para o time</td>
+<td class="px-6 py-4" style="">
+<div class="flex flex-wrap gap-1.5">
+<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gruv-yellow/20 text-gruv-yellow border border-gruv-yellow/30" style="">#trabalho</span>
+<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gruv-gray/20 text-gruv-gray border border-gruv-gray/30" style="">#reuniões</span>
+</div>
+</td>
+<td class="px-6 py-4" style="">
+<span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold bg-gruv-green text-gruv-bg shadow-sm" style="">
+                                            Concluído
+                                        </span>
+</td>
+<td class="px-6 py-4 text-gruv-gray font-mono text-xs" style="">6</td>
+<td class="px-4 py-4 text-right" style="">
+<button class="text-gruv-gray hover:text-gruv-fg opacity-0 group-hover:opacity-100 transition-opacity" style="">
+<span class="material-symbols-outlined text-[18px]" style="">more_horiz</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="flex justify-between items-center mt-4 text-xs text-gruv-gray font-medium">
+<div class="" style="">Mostrando 1 a 6 de 245 entradas</div>
+<div class="flex gap-2">
+<button class="px-3 py-1.5 rounded border border-gruv-bg-soft hover:bg-gruv-bg-soft hover:text-gruv-fg2 transition-colors disabled:opacity-50" style="">Anterior</button>
+<button class="px-3 py-1.5 rounded border border-gruv-bg-soft hover:bg-gruv-bg-soft hover:text-gruv-fg2 transition-colors" style="">Próximo</button>
+</div>
+</div>
+</div>
+<aside class="w-[420px] bg-gruv-bg rounded-lg border border-gruv-bg-soft shadow-xl flex flex-col shrink-0 overflow-hidden">
+<div class="h-32 bg-cover bg-center relative" style="background-image: url(&quot;https://lh3.googleusercontent.com/aida-public/AB6AXuD3rLsM6aOgqwmVNBdAP7wsXO6uzRE_6zsFuDRMiVc4oEb54WV08Uww9Xi4g19wb8G4f1r7igrtzln5te3VMMLLLvKhkdotE1sS95YF1PVmOauDvMDEYOh0anq8te9uHK4nzt695r_QfVelkZ1FLZpAYiwPBnnFaRUKOWygCuFpeS-ytiqAh4PzLs2btwD-nSvmHblj3x1L6x5tiQnAXvCZlpJBBGaCsY4xEDgJ8RpqF0cvSkX6JowryhjhSWSwdPWu_Pac_V7_RKc\&quot;&quot;);">
+<div class="absolute inset-0 bg-gradient-to-t from-gruv-bg via-gruv-bg/50 to-transparent"></div>
+<div class="absolute top-3 right-3 flex gap-2">
+<button class="bg-gruv-bg/80 backdrop-blur-sm p-1.5 rounded-full text-gruv-fg4 hover:text-gruv-fg0 transition-colors" style="">
+<span class="material-symbols-outlined text-[18px]" style="">open_in_full</span>
+</button>
+<button class="bg-gruv-bg/80 backdrop-blur-sm p-1.5 rounded-full text-gruv-fg4 hover:text-gruv-fg0 transition-colors" style="">
+<span class="material-symbols-outlined text-[18px]" style="">close</span>
+</button>
+</div>
+</div>
+<div class="px-6 -mt-8 relative z-10 mb-4">
+<div class="h-16 w-16 bg-gruv-bg-soft rounded-lg flex items-center justify-center border-4 border-gruv-bg shadow-lg mb-3">
+<span class="material-symbols-outlined text-gruv-yellow text-[32px]" style="">description</span>
+</div>
+<h2 class="text-xl font-bold text-gruv-fg0 leading-tight mb-1" style="">Padrões de Refatoração</h2>
+<p class="text-xs text-gruv-gray font-mono" style="">ID: REF-2023-004</p>
+</div>
+<div class="flex-1 overflow-y-auto px-6 pb-6">
+<div class="grid grid-cols-2 gap-4 mb-6">
+<div class="flex flex-col gap-1">
+<span class="text-[10px] font-bold text-gruv-gray uppercase tracking-wider" style="">Status</span>
+<div>
+<span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-bold bg-gruv-green text-gruv-bg shadow-sm" style="">
+                                Concluído
+                            </span>
+</div>
+</div>
+<div class="flex flex-col gap-1">
+<span class="text-[10px] font-bold text-gruv-gray uppercase tracking-wider" style="">Data de Criação</span>
+<div class="flex items-center gap-1.5 text-sm text-gruv-fg2 font-mono" style="">
+<span class="material-symbols-outlined text-[14px] text-gruv-gray" style="">calendar_today</span>
+                            24-10-2023
+                        </div>
+</div>
+<div class="col-span-2 flex flex-col gap-1">
+<span class="text-[10px] font-bold text-gruv-gray uppercase tracking-wider" style="">Tags</span>
+<div class="flex flex-wrap gap-1.5">
+<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gruv-aqua/20 text-gruv-aqua border border-gruv-aqua/30" style="">#dev</span>
+<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gruv-green/20 text-gruv-green border border-gruv-green/30" style="">#clean-code</span>
+</div>
+</div>
+<div class="col-span-2 flex flex-col gap-1">
+<span class="text-[10px] font-bold text-gruv-gray uppercase tracking-wider" style="">Links</span>
+<div class="flex items-center gap-2">
+<span class="inline-flex items-center justify-center h-6 px-2 rounded bg-gruv-bg-hard border border-gruv-bg-soft text-gruv-blue text-xs font-mono gap-1 hover:border-gruv-blue transition-colors cursor-pointer" style="">
+<span class="material-symbols-outlined text-[12px]" style="">link</span>
+                                Clean Code
+                            </span>
+<span class="inline-flex items-center justify-center h-6 px-2 rounded bg-gruv-bg-hard border border-gruv-bg-soft text-gruv-blue text-xs font-mono gap-1 hover:border-gruv-blue transition-colors cursor-pointer" style="">
+<span class="material-symbols-outlined text-[12px]" style="">link</span>
+                                Martin Fowler
+                            </span>
+<span class="text-xs text-gruv-gray" style="">+10</span>
+</div>
+</div>
+</div>
+<div class="space-y-4">
+<div>
+<label class="block text-xs font-bold text-gruv-fg4 uppercase tracking-wider mb-2 flex items-center gap-2" style="">
+<span class="material-symbols-outlined text-[16px]" style="">format_list_bulleted</span>
+                            Roteiro
+                        </label>
+<div class="relative group">
+<textarea class="w-full bg-gruv-bg-hard border border-gruv-bg-soft rounded p-3 text-sm text-gruv-fg focus:border-gruv-yellow focus:ring-1 focus:ring-gruv-yellow outline-none transition-all resize-none font-mono leading-relaxed" rows="5">1. Introdução aos princípios SOLID
+2. Code Smells comuns
+3. Técnicas de extração de métodos
+4. Simplificação de condicionais
+5. Testes unitários pós-refatoração</textarea>
+<div class="absolute bottom-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-1 rounded bg-gruv-bg-soft text-gruv-gray hover:text-gruv-fg" style="">
+<span class="material-symbols-outlined text-[14px]" style="">edit</span>
+</button>
+</div>
+</div>
+</div>
+<div>
+<label class="block text-xs font-bold text-gruv-fg4 uppercase tracking-wider mb-2 flex items-center gap-2" style="">
+<span class="material-symbols-outlined text-[16px]" style="">chat_bubble_outline</span>
+                            Comentário
+                        </label>
+<div class="relative group">
+<textarea class="w-full bg-gruv-bg-hard border border-gruv-bg-soft rounded p-3 text-sm text-gruv-fg focus:border-gruv-yellow focus:ring-1 focus:ring-gruv-yellow outline-none transition-all resize-none font-mono leading-relaxed" rows="4">Revisar especialmente o capítulo 4 do livro do Fowler. A parte sobre "Composing Methods" é crucial para o projeto atual. Lembre-se de aplicar os exemplos em TypeScript.</textarea>
+<div class="absolute bottom-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-1 rounded bg-gruv-bg-soft text-gruv-gray hover:text-gruv-fg" style="">
+<span class="material-symbols-outlined text-[14px]" style="">edit</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="p-4 border-t border-gruv-bg-soft bg-gruv-bg-soft/20 flex justify-between items-center">
+<span class="text-xs text-gruv-gray" style="">Última edição: 2h atrás</span>
+<button class="flex items-center gap-1.5 px-3 py-1.5 rounded bg-gruv-yellow text-gruv-bg text-xs font-bold hover:bg-gruv-yellow/90 transition-colors" style="">
+<span class="material-symbols-outlined text-[14px]" style="">save</span>
+                    Salvar
+                </button>
+</div>
+</aside>
+</div>
+</main>
+</body></html>
