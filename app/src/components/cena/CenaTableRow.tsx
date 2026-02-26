@@ -1,6 +1,7 @@
 import { memo, useRef, useState, useEffect } from 'react';
 import { ChevronRight, Pencil, X, Check } from 'lucide-react';
 import { TagList, StatusBadge, TagBadge } from './StatusBadge';
+import { LinkText } from './LinkText';
 import type { Cena, StatusType } from '../../types';
 
 type EditField = 'roteiro' | 'comentario' | 'tag' | 'obs' | string;
@@ -129,7 +130,7 @@ export const CenaTableRow = memo(function CenaTableRow({
         return (
             <div className="flex items-start gap-1 group/cell h-full w-full">
                 <div className={`flex-1 text-gruv-fg text-xs leading-relaxed overflow-hidden ${expanded ? 'whitespace-pre-wrap break-words' : 'truncate'}`}>
-                    {text}
+                    <LinkText text={text} />
                 </div>
                 <button onClick={(e) => handleStartEdit(field, e, isExtra)} className="p-0.5 mt-0.5 rounded opacity-0 group-hover/cell:opacity-60 hover:opacity-100! text-gruv-gray hover:text-gruv-yellow transition-all flex-shrink-0" title="Editar">
                     <Pencil size={11} />

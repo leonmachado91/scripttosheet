@@ -69,6 +69,9 @@ function doPost(e) {
       case 'excluirCena':
         resultado = excluirCena(params.sheetId, params.linha);
         break;
+      case 'buscarPreviewLink':
+        resultado = buscarPreviewLink_(params.url);
+        break;
       default:
         resultado = { erro: 'Ação desconhecida: ' + action };
     }
@@ -78,6 +81,52 @@ function doPost(e) {
   } catch (err) {
     return ContentService.createTextOutput(JSON.stringify({ erro: err.message || String(err) }))
       .setMimeType(ContentService.MimeType.JSON);
+  }
+}
+
+/**
+ * Busca og:title, og:image e og:description de uma URL externa.
+ * Retorna { title, image, description } ou null em caso de erro.
+ */
+function buscarPreviewLink_(url) {
+  if (!url) return null;
+  try {
+    var response = UrlFetchApp.fetch(url, {
+      muteHttpExceptions: true,
+      followRedirects: true,
+      headers: { 'User-Agent': 'Mozilla/5.0 (compatible; ScriptToSheet/1.0)' },
+      validateHttpsCertificates: false
+    });
+
+    var statusCode = response.getResponseCode();
+    if (statusCode < 200 || statusCode >= 400) return null;
+
+    var html = response.getContentText();
+    if (!html) return null;
+
+    // Extrair og:title
+    var titleMatch = html.match(/<meta[^>]+property=["']og:title["'][^>]+content=["']([^"']+)["']/i)
+                  || html.match(/<meta[^>]+content=["']([^"']+)["'][^>]+property=["']og:title["']/i)
+                  || html.match(/<title[^>]*>([^<]+)<\/title>/i);
+    var title = titleMatch ? titleMatch[1].trim() : '';
+
+    // Extrair og:image
+    var imageMatch = html.match(/<meta[^>]+property=["']og:image["'][^>]+content=["']([^"']+)["']/i)
+                  || html.match(/<meta[^>]+content=["']([^"']+)["'][^>]+property=["']og:image["']/i);
+    var image = imageMatch ? imageMatch[1].trim() : '';
+
+    // Extrair og:description
+    var descMatch = html.match(/<meta[^>]+property=["']og:description["'][^>]+content=["']([^"']+)["']/i)
+                 || html.match(/<meta[^>]+content=["']([^"']+)["'][^>]+property=["']og:description["']/i)
+                 || html.match(/<meta[^>]+name=["']description["'][^>]+content=["']([^"']+)["']/i);
+    var description = descMatch ? descMatch[1].trim() : '';
+
+    if (!title && !image && !description) return null;
+
+    return { title: title, image: image, description: description };
+  } catch (e) {
+    Logger.log('buscarPreviewLink_ erro: ' + e.message);
+    return null;
   }
 }
 

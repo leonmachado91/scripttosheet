@@ -5,6 +5,7 @@ import { api } from '../../services/api';
 import { FileText, X, Maximize2, Minimize2, Save as SaveIcon, Pencil, Check } from 'lucide-react';
 import type { StatusType } from '../../types';
 import { StatusBadge, TagBadge } from './StatusBadge';
+import { LinkText } from './LinkText';
 
 const ALL_STATUSES: StatusType[] = ['Aberto', 'Layout', 'Animação', 'Concluído', 'Cancelado'];
 
@@ -216,7 +217,7 @@ export function CenaDetalhePanel() {
                     <div
                         className={`w-full rounded-lg p-3 text-[13px] leading-relaxed border border-transparent whitespace-pre-wrap break-words ${mono ? 'text-gruv-yellow font-mono' : 'text-gruv-fg'}`}
                     >
-                        {value || <span className="text-gruv-gray/40 italic">vazio</span>}
+                        {value ? <LinkText text={value} /> : <span className="text-gruv-gray/40 italic">vazio</span>}
                     </div>
                 )}
             </div>

@@ -48,4 +48,7 @@ export const api = {
 
     excluirCena: (sheetId: string, linha: number) =>
         callApi<{ sucesso: boolean }>('excluirCena', { sheetId, linha }),
+
+    buscarPreviewLink: (url: string) =>
+        callApi<{ title?: string; image?: string; description?: string } | null>('buscarPreviewLink', { url }),
 };

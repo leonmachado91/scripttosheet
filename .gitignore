@@ -29,3 +29,6 @@ app/dist/
 
 # Logs
 *.log
+
+# Local Netlify folder
+.netlify

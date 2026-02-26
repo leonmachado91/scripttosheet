@@ -1,0 +1,19 @@
+[build]
+  # O diretório onde o build deve ser executado
+  base = "app"
+  
+  # O comando para gerar os arquivos estáticos
+  command = "pnpm run build"
+  
+  # O diretório que o Netlify deve servir (relativo à base)
+  publish = "dist"
+
+[build.environment]
+  # Garante que o Netlify use uma versão recente do Node
+  NODE_VERSION = "20"
+
+# Redirecionamento para Single Page App (React Router, etc)
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
