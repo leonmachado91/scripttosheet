@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect, useMemo } from 'react';
 import { useCenaStore, type FilterRule } from '../../stores/useCenaStore';
-import { Filter, ArrowUpDown, Tags, Download, Plus, Trash2 } from 'lucide-react';
+import { Filter, ArrowUpDown, Tags, Download, Plus, Trash2, Columns3, Eye, EyeOff } from 'lucide-react';
 
 const OPERATORS: { value: FilterRule['operator']; label: string }[] = [
     { value: 'contains', label: 'contém' },
@@ -21,18 +21,24 @@ export function Toolbar() {
     const updateFilter = useCenaStore(s => s.updateFilter);
     const removeFilter = useCenaStore(s => s.removeFilter);
     const clearFilters = useCenaStore(s => s.clearFilters);
+    const hiddenColumns = useCenaStore(s => s.hiddenColumns);
+    const toggleColumn = useCenaStore(s => s.toggleColumn);
+    const showAllColumns = useCenaStore(s => s.showAllColumns);
 
     const [filterOpen, setFilterOpen] = useState(false);
+    const [columnsOpen, setColumnsOpen] = useState(false);
     const filterRef = useRef<HTMLDivElement>(null);
+    const columnsRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
-        if (!filterOpen) return;
+        if (!filterOpen && !columnsOpen) return;
         const handler = (e: MouseEvent) => {
-            if (filterRef.current && !filterRef.current.contains(e.target as Node)) setFilterOpen(false);
+            if (filterOpen && filterRef.current && !filterRef.current.contains(e.target as Node)) setFilterOpen(false);
+            if (columnsOpen && columnsRef.current && !columnsRef.current.contains(e.target as Node)) setColumnsOpen(false);
         };
         document.addEventListener('mousedown', handler);
         return () => document.removeEventListener('mousedown', handler);
-    }, [filterOpen]);
+    }, [filterOpen, columnsOpen]);
 
     const columns = useMemo(() => [
         { key: 'roteiro', label: 'Roteiro' },
@@ -213,6 +219,59 @@ export function Toolbar() {
                                 <Plus size={13} />
                                 Adicionar filtro
                             </button>
+                        </div>
+                    </div>
+                )}
+            </div>
+
+            {/* Column Visibility Button */}
+            <div ref={columnsRef} className="relative">
+                <button
+                    onClick={() => setColumnsOpen(!columnsOpen)}
+                    className={`flex items-center gap-2 px-3 py-1.5 rounded border transition-colors text-xs font-medium
+                        ${hiddenColumns.length > 0
+                            ? 'border-gruv-aqua bg-gruv-aqua/10 text-gruv-aqua'
+                            : 'border-gruv-bg-soft bg-gruv-bg hover:bg-gruv-bg-soft text-gruv-fg4'}`}
+                    title="Mostrar/ocultar colunas"
+                >
+                    <Columns3 size={16} />
+                    Colunas
+                    {hiddenColumns.length > 0 && (
+                        <span className="ml-0.5 px-1.5 py-0.5 rounded-full bg-gruv-aqua text-gruv-bg text-[10px] font-bold leading-none">
+                            {hiddenColumns.length}
+                        </span>
+                    )}
+                </button>
+
+                {columnsOpen && (
+                    <div className="absolute top-full left-0 mt-1 bg-gruv-bg-hard border border-gruv-bg-soft rounded-xl shadow-2xl z-50 w-[220px] max-h-[350px] overflow-hidden flex flex-col">
+                        <div className="flex items-center justify-between px-4 py-3 border-b border-gruv-bg-soft">
+                            <span className="text-xs font-bold text-gruv-fg2">Colunas</span>
+                            {hiddenColumns.length > 0 && (
+                                <button onClick={showAllColumns} className="text-[11px] text-gruv-aqua hover:text-gruv-aqua/80 font-medium transition-colors">
+                                    Mostrar todas
+                                </button>
+                            )}
+                        </div>
+                        <div className="flex-1 overflow-y-auto px-2 py-2 space-y-0.5">
+                            {columns.map(c => {
+                                const isHidden = hiddenColumns.includes(c.key);
+                                return (
+                                    <button
+                                        key={c.key}
+                                        onClick={() => toggleColumn(c.key)}
+                                        className={`flex items-center gap-2.5 w-full px-3 py-2 rounded-lg text-xs transition-colors
+                                            ${isHidden
+                                                ? 'text-gruv-gray hover:bg-gruv-bg-soft/50'
+                                                : 'text-gruv-fg hover:bg-gruv-bg-soft'}`}
+                                    >
+                                        {isHidden
+                                            ? <EyeOff size={13} className="text-gruv-gray shrink-0" />
+                                            : <Eye size={13} className="text-gruv-aqua shrink-0" />}
+                                        <span className={isHidden ? 'line-through opacity-60' : ''}>{c.label}</span>
+                                    </button>
+                                );
+                            })}
                         </div>
                     </div>
                 )}

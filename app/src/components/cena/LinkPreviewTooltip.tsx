@@ -1,9 +1,11 @@
 import { useState, useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import { getPreviewStrategy, getYoutubeId, getYoutubeThumbnail, getServiceMeta, getFriendlyLabel } from '../../utils/linkParser';
 import { api } from '../../services/api';
 
 interface LinkPreviewTooltipProps {
     url: string;
+    anchorRect: DOMRect | null;
 }
 
 interface PreviewData {
@@ -18,7 +20,7 @@ const previewCache = new Map<string, PreviewData | null>();
 // Cache de oEmbed YouTube em memória
 const youtubeCache = new Map<string, string>();
 
-export function LinkPreviewTooltip({ url }: LinkPreviewTooltipProps) {
+export function LinkPreviewTooltip({ url, anchorRect }: LinkPreviewTooltipProps) {
     const [preview, setPreview] = useState<PreviewData | null>(null);
     const [loading, setLoading] = useState(false);
     const [imgError, setImgError] = useState(false);
@@ -110,11 +112,35 @@ export function LinkPreviewTooltip({ url }: LinkPreviewTooltipProps) {
     // Truncar URL longa
     const truncatedUrl = url.length > 60 ? url.slice(0, 57) + '…' : url;
 
-    return (
+    // Calcular posição fixa baseada no anchorRect
+    const tooltipStyle: React.CSSProperties = {
+        animationDuration: '150ms',
+        position: 'fixed',
+        zIndex: 9999,
+        width: '18rem',
+    };
+
+    if (anchorRect) {
+        const spaceAbove = anchorRect.top;
+
+        if (spaceAbove > 200) {
+            // Mostrar acima do link
+            tooltipStyle.bottom = `${window.innerHeight - anchorRect.top + 6}px`;
+        } else {
+            // Mostrar abaixo do link
+            tooltipStyle.top = `${anchorRect.bottom + 6}px`;
+        }
+
+        // Horizontalmente: alinhar à esquerda do link, mas sem sair da tela
+        const left = Math.min(anchorRect.left, window.innerWidth - 300);
+        tooltipStyle.left = `${Math.max(8, left)}px`;
+    }
+
+    const tooltip = (
         <div
             ref={tooltipRef}
-            className="absolute z-50 bottom-full left-0 mb-2 w-72 bg-gruv-bg-hard border border-gruv-bg-soft rounded-lg shadow-xl overflow-hidden pointer-events-none animate-fade-in"
-            style={{ animationDuration: '150ms' }}
+            className="bg-gruv-bg-hard border border-gruv-bg-soft rounded-lg shadow-xl overflow-hidden pointer-events-none animate-fade-in"
+            style={tooltipStyle}
         >
             {/* Imagem / Thumbnail */}
             {preview?.image && !imgError && (
@@ -171,4 +197,6 @@ export function LinkPreviewTooltip({ url }: LinkPreviewTooltipProps) {
             </div>
         </div>
     );
+
+    return createPortal(tooltip, document.body);
 }

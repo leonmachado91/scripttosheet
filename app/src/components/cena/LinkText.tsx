@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useRef } from 'react';
 import Linkify from 'linkify-react';
 import { getFriendlyLabel } from '../../utils/linkParser';
 import { LinkPreviewTooltip } from './LinkPreviewTooltip';
@@ -9,9 +9,16 @@ interface LinkTextProps {
 
 function LinkWrapper({ href }: { href: string; children?: React.ReactNode }) {
     const [hovered, setHovered] = useState(false);
+    const [rect, setRect] = useState<DOMRect | null>(null);
+    const linkRef = useRef<HTMLAnchorElement>(null);
     const label = getFriendlyLabel(href);
 
-    const handleMouseEnter = useCallback(() => setHovered(true), []);
+    const handleMouseEnter = useCallback(() => {
+        if (linkRef.current) {
+            setRect(linkRef.current.getBoundingClientRect());
+        }
+        setHovered(true);
+    }, []);
     const handleMouseLeave = useCallback(() => setHovered(false), []);
 
     return (
@@ -21,6 +28,7 @@ function LinkWrapper({ href }: { href: string; children?: React.ReactNode }) {
             onMouseLeave={handleMouseLeave}
         >
             <a
+                ref={linkRef}
                 href={href}
                 target="_blank"
                 rel="noopener noreferrer"
@@ -30,7 +38,7 @@ function LinkWrapper({ href }: { href: string; children?: React.ReactNode }) {
             >
                 {label}
             </a>
-            {hovered && <LinkPreviewTooltip url={href} />}
+            {hovered && <LinkPreviewTooltip url={href} anchorRect={rect} />}
         </span>
     );
 }

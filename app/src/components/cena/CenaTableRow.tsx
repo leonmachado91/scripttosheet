@@ -14,6 +14,7 @@ interface CenaTableRowProps {
     allProjectTags: string[];
     isStatusEditing: boolean;
     extraColumns: string[];
+    hiddenColumns: string[];
     editingCell: { linha: number; field: string; isExtra?: boolean } | null;
     onToggleRow: (linha: number, e: React.MouseEvent) => void;
     onOpenPanel: (cena: Cena) => void;
@@ -34,6 +35,7 @@ export const CenaTableRow = memo(function CenaTableRow({
     allProjectTags,
     isStatusEditing,
     extraColumns,
+    hiddenColumns,
     editingCell,
     onToggleRow,
     onOpenPanel,
@@ -175,35 +177,45 @@ export const CenaTableRow = memo(function CenaTableRow({
 
     return (
         <tr className={`group transition-colors border-b border-gruv-bg-soft/40 ${isSelected ? 'bg-gruv-bg-soft/60' : `${zebraClass} hover:bg-gruv-bg-soft/30`}`}>
-            <td className="pl-4 pr-2 py-3 align-top" style={{ width: 'var(--col-ordem)', overflow: 'hidden' }}>
-                <div className="flex items-start gap-1.5 overflow-hidden">
-                    <button onClick={(e) => onToggleRow(cena.linha, e)} className="p-0.5 rounded hover:bg-gruv-bg-soft transition-all shrink-0" title={expanded ? 'Recolher' : 'Expandir'}>
-                        <ChevronRight size={14} className={`text-gruv-gray transition-transform duration-150 ${expanded ? 'rotate-90 text-gruv-yellow' : ''}`} />
-                    </button>
-                    <span onClick={() => onOpenPanel(cena)} className={`font-bold text-[13px] whitespace-nowrap overflow-hidden text-ellipsis cursor-pointer hover:text-gruv-yellow transition-colors ${isSelected ? 'text-gruv-yellow' : 'text-gruv-fg2'}`} title={`Cena ${cena.ordem}`}>
-                        Cena {cena.ordem}
-                    </span>
-                </div>
-            </td>
-            <td className="px-2 py-2 align-top" style={{ width: 'var(--col-roteiro)', maxWidth: 'var(--col-roteiro)', overflow: isEditing('roteiro') ? 'visible' : 'hidden' }}>{renderTextCell('roteiro')}</td>
-            <td className="px-2 py-2 align-top" style={{ width: 'var(--col-comentario)', maxWidth: 'var(--col-comentario)', overflow: isEditing('comentario') ? 'visible' : 'hidden' }}>{renderTextCell('comentario')}</td>
-            <td className="px-2 py-2 align-top" style={{ width: 'var(--col-tag)', maxWidth: 'var(--col-tag)', overflow: isEditing('tag') ? 'visible' : 'hidden' }}>{renderTagCell()}</td>
-            <td className="px-2 py-2 align-top relative" style={{ width: 'var(--col-status)', maxWidth: 'var(--col-status)', overflow: 'visible' }} ref={isStatusEditing ? statusDropdownRef : undefined}>
-                <div onClick={(e) => onToggleStatusEdit(cena.linha, e)} className="cursor-pointer hover:opacity-80 transition-opacity flex items-center h-full min-h-[24px]" title="Alterar status">
-                    <StatusBadge status={cena.status} />
-                </div>
-                {isStatusEditing && (
-                    <div className="absolute top-full left-1 mt-0.5 bg-gruv-bg-hard border border-gruv-bg-soft rounded-lg shadow-xl py-1 z-50 min-w-[120px]">
-                        {ALL_STATUSES.map((s) => (
-                            <button key={s} onClick={(e) => onStatusChange(cena, s, e)} title={`Alterar para ${s}`}
-                                className={`w-full flex items-center px-2.5 py-1.5 hover:bg-gruv-bg-soft/60 transition-colors ${cena.status === s ? 'bg-gruv-bg-soft/40' : ''}`}>
-                                <StatusBadge status={s} />
-                            </button>
-                        ))}
+            {!hiddenColumns.includes('ordem') && (
+                <td className="pl-4 pr-2 py-3 align-top" style={{ width: 'var(--col-ordem)', overflow: 'hidden' }}>
+                    <div className="flex items-start gap-1.5 overflow-hidden">
+                        <button onClick={(e) => onToggleRow(cena.linha, e)} className="p-0.5 rounded hover:bg-gruv-bg-soft transition-all shrink-0" title={expanded ? 'Recolher' : 'Expandir'}>
+                            <ChevronRight size={14} className={`text-gruv-gray transition-transform duration-150 ${expanded ? 'rotate-90 text-gruv-yellow' : ''}`} />
+                        </button>
+                        <span onClick={() => onOpenPanel(cena)} className={`font-bold text-[13px] whitespace-nowrap overflow-hidden text-ellipsis cursor-pointer hover:text-gruv-yellow transition-colors ${isSelected ? 'text-gruv-yellow' : 'text-gruv-fg2'}`} title={`Cena ${cena.ordem}`}>
+                            Cena {cena.ordem}
+                        </span>
                     </div>
-                )}
-            </td>
-            {extraColumns.map((col) => (
+                </td>
+            )}
+            {!hiddenColumns.includes('roteiro') && (
+                <td className="px-2 py-2 align-top" style={{ width: 'var(--col-roteiro)', maxWidth: 'var(--col-roteiro)', overflow: isEditing('roteiro') ? 'visible' : 'hidden' }}>{renderTextCell('roteiro')}</td>
+            )}
+            {!hiddenColumns.includes('comentario') && (
+                <td className="px-2 py-2 align-top" style={{ width: 'var(--col-comentario)', maxWidth: 'var(--col-comentario)', overflow: isEditing('comentario') ? 'visible' : 'hidden' }}>{renderTextCell('comentario')}</td>
+            )}
+            {!hiddenColumns.includes('tag') && (
+                <td className="px-2 py-2 align-top" style={{ width: 'var(--col-tag)', maxWidth: 'var(--col-tag)', overflow: isEditing('tag') ? 'visible' : 'hidden' }}>{renderTagCell()}</td>
+            )}
+            {!hiddenColumns.includes('status') && (
+                <td className="px-2 py-2 align-top relative" style={{ width: 'var(--col-status)', maxWidth: 'var(--col-status)', overflow: 'visible' }} ref={isStatusEditing ? statusDropdownRef : undefined}>
+                    <div onClick={(e) => onToggleStatusEdit(cena.linha, e)} className="cursor-pointer hover:opacity-80 transition-opacity flex items-center h-full min-h-[24px]" title="Alterar status">
+                        <StatusBadge status={cena.status} />
+                    </div>
+                    {isStatusEditing && (
+                        <div className="absolute top-full left-1 mt-0.5 bg-gruv-bg-hard border border-gruv-bg-soft rounded-lg shadow-xl py-1 z-50 min-w-[120px]">
+                            {ALL_STATUSES.map((s) => (
+                                <button key={s} onClick={(e) => onStatusChange(cena, s, e)} title={`Alterar para ${s}`}
+                                    className={`w-full flex items-center px-2.5 py-1.5 hover:bg-gruv-bg-soft/60 transition-colors ${cena.status === s ? 'bg-gruv-bg-soft/40' : ''}`}>
+                                    <StatusBadge status={s} />
+                                </button>
+                            ))}
+                        </div>
+                    )}
+                </td>
+            )}
+            {extraColumns.filter(col => !hiddenColumns.includes(col)).map((col) => (
                 <td key={col} className="px-2 py-2 align-top" style={{ width: `var(--col-${col})`, maxWidth: `var(--col-${col})`, overflow: isEditing(col) ? 'visible' : 'hidden' }}>{renderTextCell(col, true)}</td>
             ))}
             <td className="pr-2 py-3 text-center" style={{ width: 'var(--col-spacer)' }}>

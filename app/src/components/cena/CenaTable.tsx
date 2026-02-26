@@ -23,6 +23,7 @@ export function CenaTable() {
     const setCenaAberta = useCenaStore(s => s.setCenaAberta);
     const updateCena = useCenaStore(s => s.updateCena);
     const filters = useCenaStore(s => s.filters);
+    const hiddenColumns = useCenaStore(s => s.hiddenColumns);
 
     const [allExpanded, setAllExpanded] = useState(false);
     const [expandedRows, setExpandedRows] = useState<Set<number>>(new Set());
@@ -91,9 +92,15 @@ export function CenaTable() {
         }
     }, [colWidths, extraColumns]);
 
-    // Build CSS calc expression for table width
-    const colCalcParts = ['var(--col-ordem)', 'var(--col-roteiro)', 'var(--col-comentario)', 'var(--col-tag)', 'var(--col-status)'];
-    extraColumns.forEach(col => colCalcParts.push(`var(--col-${col})`));
+    // Build CSS calc expression for table width (exclude hidden columns)
+    const FIXED_COLS = ['ordem', 'roteiro', 'comentario', 'tag', 'status'];
+    const colCalcParts: string[] = [];
+    for (const col of FIXED_COLS) {
+        if (!hiddenColumns.includes(col)) colCalcParts.push(`var(--col-${col})`);
+    }
+    for (const col of extraColumns) {
+        if (!hiddenColumns.includes(col)) colCalcParts.push(`var(--col-${col})`);
+    }
     colCalcParts.push('var(--col-spacer)');
     const tableWidthCalc = `calc(${colCalcParts.join(' + ')})`;
 
@@ -289,41 +296,51 @@ export function CenaTable() {
                 }}>
                     <thead className="sticky top-0 z-10 bg-gruv-bg-soft">
                         <tr className="text-[10px] uppercase tracking-widest text-gruv-gray font-bold">
-                            <th className="pl-4 pr-1 py-3 border-b border-gruv-bg-soft relative group/resizer align-top" style={{ width: 'var(--col-ordem)' }}>
-                                <div className="flex items-start gap-2 overflow-hidden">
-                                    <button onClick={toggleAll} title={allExpanded ? 'Recolher todos' : 'Expandir todos'} className="p-0.5 rounded hover:bg-gruv-bg transition-colors text-gruv-gray hover:text-gruv-yellow shrink-0">
-                                        {allExpanded ? <AlignJustify size={12} /> : <AlignLeft size={12} />}
-                                    </button>
-                                    <button onClick={() => toggleSort('ordem')} className="flex items-center gap-1 group/th hover:text-gruv-fg2 transition-colors truncate">Cena {sortIcon('ordem')}</button>
-                                </div>
-                                <div className="absolute right-0 top-0 bottom-0 w-1 cursor-col-resize hover:bg-gruv-bg-soft/80 group-hover/resizer:bg-gruv-bg-hard transition-colors" onMouseDown={(e) => handleResizeStart('ordem', e)} />
-                            </th>
-                            <th className="px-2 py-3 border-b border-gruv-bg-soft relative group/resizer" style={{ width: 'var(--col-roteiro)' }}>
-                                <div className="overflow-hidden">
-                                    <button onClick={() => toggleSort('roteiro')} className="flex items-center gap-1 group/th hover:text-gruv-fg2 transition-colors truncate w-full">Roteiro {sortIcon('roteiro')}</button>
-                                </div>
-                                <div className="absolute right-0 top-0 bottom-0 w-1 cursor-col-resize hover:bg-gruv-bg-soft/80 group-hover/resizer:bg-gruv-bg-hard transition-colors" onMouseDown={(e) => handleResizeStart('roteiro', e)} />
-                            </th>
-                            <th className="px-2 py-3 border-b border-gruv-bg-soft relative group/resizer" style={{ width: 'var(--col-comentario)' }}>
-                                <div className="overflow-hidden">
-                                    <button onClick={() => toggleSort('comentario')} className="flex items-center gap-1 group/th hover:text-gruv-fg2 transition-colors truncate w-full">Comentário {sortIcon('comentario')}</button>
-                                </div>
-                                <div className="absolute right-0 top-0 bottom-0 w-1 cursor-col-resize hover:bg-gruv-bg-soft/80 group-hover/resizer:bg-gruv-bg-hard transition-colors" onMouseDown={(e) => handleResizeStart('comentario', e)} />
-                            </th>
-                            <th className="px-2 py-3 border-b border-gruv-bg-soft relative group/resizer" style={{ width: 'var(--col-tag)' }}>
-                                <div className="overflow-hidden">
-                                    <button onClick={() => toggleSort('tag')} className="flex items-center gap-1 group/th hover:text-gruv-fg2 transition-colors truncate w-full">Tags {sortIcon('tag')}</button>
-                                </div>
-                                <div className="absolute right-0 top-0 bottom-0 w-1 cursor-col-resize hover:bg-gruv-bg-soft/80 group-hover/resizer:bg-gruv-bg-hard transition-colors" onMouseDown={(e) => handleResizeStart('tag', e)} />
-                            </th>
-                            <th className="px-2 py-3 border-b border-gruv-bg-soft relative group/resizer" style={{ width: 'var(--col-status)' }}>
-                                <div className="overflow-hidden">
-                                    <button onClick={() => toggleSort('status')} className="flex items-center gap-1 group/th hover:text-gruv-fg2 transition-colors truncate w-full">Status {sortIcon('status')}</button>
-                                </div>
-                                <div className="absolute right-0 top-0 bottom-0 w-1 cursor-col-resize hover:bg-gruv-bg-soft/80 group-hover/resizer:bg-gruv-bg-hard transition-colors" onMouseDown={(e) => handleResizeStart('status', e)} />
-                            </th>
+                            {!hiddenColumns.includes('ordem') && (
+                                <th className="pl-4 pr-1 py-3 border-b border-gruv-bg-soft relative group/resizer align-top" style={{ width: 'var(--col-ordem)' }}>
+                                    <div className="flex items-start gap-2 overflow-hidden">
+                                        <button onClick={toggleAll} title={allExpanded ? 'Recolher todos' : 'Expandir todos'} className="p-0.5 rounded hover:bg-gruv-bg transition-colors text-gruv-gray hover:text-gruv-yellow shrink-0">
+                                            {allExpanded ? <AlignJustify size={12} /> : <AlignLeft size={12} />}
+                                        </button>
+                                        <button onClick={() => toggleSort('ordem')} className="flex items-center gap-1 group/th hover:text-gruv-fg2 transition-colors truncate">Cena {sortIcon('ordem')}</button>
+                                    </div>
+                                    <div className="absolute right-0 top-0 bottom-0 w-1 cursor-col-resize hover:bg-gruv-bg-soft/80 group-hover/resizer:bg-gruv-bg-hard transition-colors" onMouseDown={(e) => handleResizeStart('ordem', e)} />
+                                </th>
+                            )}
+                            {!hiddenColumns.includes('roteiro') && (
+                                <th className="px-2 py-3 border-b border-gruv-bg-soft relative group/resizer" style={{ width: 'var(--col-roteiro)' }}>
+                                    <div className="overflow-hidden">
+                                        <button onClick={() => toggleSort('roteiro')} className="flex items-center gap-1 group/th hover:text-gruv-fg2 transition-colors truncate w-full">Roteiro {sortIcon('roteiro')}</button>
+                                    </div>
+                                    <div className="absolute right-0 top-0 bottom-0 w-1 cursor-col-resize hover:bg-gruv-bg-soft/80 group-hover/resizer:bg-gruv-bg-hard transition-colors" onMouseDown={(e) => handleResizeStart('roteiro', e)} />
+                                </th>
+                            )}
+                            {!hiddenColumns.includes('comentario') && (
+                                <th className="px-2 py-3 border-b border-gruv-bg-soft relative group/resizer" style={{ width: 'var(--col-comentario)' }}>
+                                    <div className="overflow-hidden">
+                                        <button onClick={() => toggleSort('comentario')} className="flex items-center gap-1 group/th hover:text-gruv-fg2 transition-colors truncate w-full">Comentário {sortIcon('comentario')}</button>
+                                    </div>
+                                    <div className="absolute right-0 top-0 bottom-0 w-1 cursor-col-resize hover:bg-gruv-bg-soft/80 group-hover/resizer:bg-gruv-bg-hard transition-colors" onMouseDown={(e) => handleResizeStart('comentario', e)} />
+                                </th>
+                            )}
+                            {!hiddenColumns.includes('tag') && (
+                                <th className="px-2 py-3 border-b border-gruv-bg-soft relative group/resizer" style={{ width: 'var(--col-tag)' }}>
+                                    <div className="overflow-hidden">
+                                        <button onClick={() => toggleSort('tag')} className="flex items-center gap-1 group/th hover:text-gruv-fg2 transition-colors truncate w-full">Tags {sortIcon('tag')}</button>
+                                    </div>
+                                    <div className="absolute right-0 top-0 bottom-0 w-1 cursor-col-resize hover:bg-gruv-bg-soft/80 group-hover/resizer:bg-gruv-bg-hard transition-colors" onMouseDown={(e) => handleResizeStart('tag', e)} />
+                                </th>
+                            )}
+                            {!hiddenColumns.includes('status') && (
+                                <th className="px-2 py-3 border-b border-gruv-bg-soft relative group/resizer" style={{ width: 'var(--col-status)' }}>
+                                    <div className="overflow-hidden">
+                                        <button onClick={() => toggleSort('status')} className="flex items-center gap-1 group/th hover:text-gruv-fg2 transition-colors truncate w-full">Status {sortIcon('status')}</button>
+                                    </div>
+                                    <div className="absolute right-0 top-0 bottom-0 w-1 cursor-col-resize hover:bg-gruv-bg-soft/80 group-hover/resizer:bg-gruv-bg-hard transition-colors" onMouseDown={(e) => handleResizeStart('status', e)} />
+                                </th>
+                            )}
                             {/* Dynamic extra columns */}
-                            {extraColumns.map((col) => (
+                            {extraColumns.filter(col => !hiddenColumns.includes(col)).map((col) => (
                                 <th key={col} className="px-2 py-3 border-b border-gruv-bg-soft relative group/resizer" style={{ width: `var(--col-${col})` }}>
                                     <div className="overflow-hidden">
                                         <button onClick={() => toggleSort(col)} className="flex items-center gap-1 group/th hover:text-gruv-fg2 transition-colors truncate w-full">
@@ -347,6 +364,7 @@ export function CenaTable() {
                                 allProjectTags={allProjectTags}
                                 isStatusEditing={editingStatus === cena.linha}
                                 extraColumns={extraColumns}
+                                hiddenColumns={hiddenColumns}
                                 editingCell={editingCell}
                                 onToggleRow={toggleRow}
                                 onOpenPanel={openPanel}

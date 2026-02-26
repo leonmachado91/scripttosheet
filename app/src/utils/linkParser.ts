@@ -29,6 +29,52 @@ export const SERVICE_META: Record<string, ServiceInfo> = {
 const IMAGE_EXTENSIONS = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.svg', '.bmp', '.avif'];
 
 /**
+ * Domínios que usam extensões de imagem em rotas de páginas HTML.
+ * URLs desses sites nunca devem ser tratadas como imagem direta.
+ */
+const HTML_WRAPPER_DOMAINS = [
+    'wikipedia.org', 'wikimedia.org', 'commons.wikimedia.org',
+    'flickr.com', 'flic.kr', 'deviantart.com',
+    'pinterest.com', 'pin.it',
+    'imgur.com',     // imgur sem /i/ no path é página HTML
+    'tumblr.com',
+];
+
+/**
+ * Verifica se uma URL aponta para um arquivo de imagem direto.
+ * Evita falsos positivos de sites que usam .jpg/.png em rotas de páginas.
+ */
+function isDirectImageUrl(parsed: URL): boolean {
+    const pathname = parsed.pathname.toLowerCase();
+    const host = parsed.hostname.replace(/^www\./, '');
+
+    // Checar se termina com extensão de imagem
+    if (!IMAGE_EXTENSIONS.some(ext => pathname.endsWith(ext))) {
+        return false;
+    }
+
+    // Excluir domínios que usam extensões de imagem em rotas HTML
+    if (HTML_WRAPPER_DOMAINS.some(d => host === d || host.endsWith('.' + d))) {
+        return false;
+    }
+
+    // O último segmento deve ser um nome de arquivo simples (sem ":" como em File:xxx.jpg)
+    const lastSegment = pathname.split('/').filter(Boolean).pop() || '';
+    if (lastSegment.includes(':')) {
+        return false;
+    }
+
+    // Caminhos com muitos segmentos tipo /wiki/File/xxx.jpg são rotas, não arquivos
+    // Mas /uploads/2024/photo.jpg é válido — checar se é "route-like"
+    const routePatterns = ['/wiki/', '/page/', '/article/', '/post/', '/entry/'];
+    if (routePatterns.some(p => pathname.includes(p))) {
+        return false;
+    }
+
+    return true;
+}
+
+/**
  * Classifica a URL e retorna a estratégia de preview ideal.
  */
 export type PreviewStrategy = 'image' | 'youtube' | 'vimeo' | 'generic';
@@ -36,10 +82,9 @@ export type PreviewStrategy = 'image' | 'youtube' | 'vimeo' | 'generic';
 export function getPreviewStrategy(url: string): PreviewStrategy {
     try {
         const parsed = new URL(url);
-        const pathname = parsed.pathname.toLowerCase();
 
-        // URL direta de imagem
-        if (IMAGE_EXTENSIONS.some(ext => pathname.endsWith(ext))) {
+        // URL direta de imagem (com validação robusta)
+        if (isDirectImageUrl(parsed)) {
             return 'image';
         }
 
