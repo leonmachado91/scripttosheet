@@ -179,3 +179,59 @@ export function getServiceMeta(url: string): ServiceInfo {
         return { label: url, icon: '🔗', color: '#458588' };
     }
 }
+
+/**
+ * Regex para extrair URLs de texto livre.
+ */
+const URL_REGEX = /https?:\/\/[^\s,<>"')\]]+/gi;
+
+/**
+ * Extrai todos os links do YouTube únicos de uma lista de cenas.
+ * Varre roteiro, comentario, obs e todos os extras.
+ */
+export function extractYoutubeLinks(cenas: { roteiro: string; comentario: string; obs: string; extras: Record<string, string> }[]): string[] {
+    const seen = new Set<string>();
+    const results: string[] = [];
+
+    for (const cena of cenas) {
+        const textos = [cena.roteiro, cena.comentario, cena.obs, ...Object.values(cena.extras || {})];
+        for (const texto of textos) {
+            if (!texto) continue;
+            const matches = texto.match(URL_REGEX);
+            if (!matches) continue;
+            for (const url of matches) {
+                if (getPreviewStrategy(url) === 'youtube' && !seen.has(url)) {
+                    seen.add(url);
+                    results.push(url);
+                }
+            }
+        }
+    }
+
+    return results;
+}
+
+/**
+ * Extrai todos os links únicos de uma lista de cenas (sem filtro de serviço).
+ */
+export function extractAllLinks(cenas: { roteiro: string; comentario: string; obs: string; extras: Record<string, string> }[]): string[] {
+    const seen = new Set<string>();
+    const results: string[] = [];
+
+    for (const cena of cenas) {
+        const textos = [cena.roteiro, cena.comentario, cena.obs, ...Object.values(cena.extras || {})];
+        for (const texto of textos) {
+            if (!texto) continue;
+            const matches = texto.match(URL_REGEX);
+            if (!matches) continue;
+            for (const url of matches) {
+                if (!seen.has(url)) {
+                    seen.add(url);
+                    results.push(url);
+                }
+            }
+        }
+    }
+
+    return results;
+}

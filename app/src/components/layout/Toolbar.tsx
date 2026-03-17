@@ -1,6 +1,7 @@
-import { useState, useRef, useEffect, useMemo } from 'react';
+import { useState, useRef, useEffect, useMemo, useCallback } from 'react';
 import { useCenaStore, type FilterRule } from '../../stores/useCenaStore';
-import { Filter, ArrowUpDown, Tags, Download, Plus, Trash2, Columns3, Eye, EyeOff } from 'lucide-react';
+import { Filter, ArrowUpDown, Tags, Download, Plus, Trash2, Columns3, Eye, EyeOff, Copy, FileDown, Youtube, Link, Table2 } from 'lucide-react';
+import { extractYoutubeLinks, extractAllLinks } from '../../utils/linkParser';
 
 const OPERATORS: { value: FilterRule['operator']; label: string }[] = [
     { value: 'contains', label: 'contém' },
@@ -27,18 +28,127 @@ export function Toolbar() {
 
     const [filterOpen, setFilterOpen] = useState(false);
     const [columnsOpen, setColumnsOpen] = useState(false);
+    const [exportOpen, setExportOpen] = useState(false);
+    const [exportFeedback, setExportFeedback] = useState<string | null>(null);
     const filterRef = useRef<HTMLDivElement>(null);
     const columnsRef = useRef<HTMLDivElement>(null);
+    const exportRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
-        if (!filterOpen && !columnsOpen) return;
+        if (!filterOpen && !columnsOpen && !exportOpen) return;
         const handler = (e: MouseEvent) => {
             if (filterOpen && filterRef.current && !filterRef.current.contains(e.target as Node)) setFilterOpen(false);
             if (columnsOpen && columnsRef.current && !columnsRef.current.contains(e.target as Node)) setColumnsOpen(false);
+            if (exportOpen && exportRef.current && !exportRef.current.contains(e.target as Node)) setExportOpen(false);
         };
         document.addEventListener('mousedown', handler);
         return () => document.removeEventListener('mousedown', handler);
-    }, [filterOpen, columnsOpen]);
+    }, [filterOpen, columnsOpen, exportOpen]);
+
+    // Apply same filter logic as CenaTable so export respects active filters
+    const visibleCenas = useMemo(() => {
+        let result = [...cenas];
+
+        for (const filter of filters) {
+            if (filter.operator === 'is_empty' || filter.operator === 'is_not_empty' || filter.value.trim()) {
+                result = result.filter(c => {
+                    const col = filter.column;
+                    const cellVal = (['roteiro', 'comentario', 'tag', 'status', 'obs'].includes(col)
+                        ? String((c as unknown as Record<string, string>)[col] || '')
+                        : c.extras?.[col] || ''
+                    ).toLowerCase();
+                    const filterVal = filter.value.trim().toLowerCase();
+                    switch (filter.operator) {
+                        case 'contains': return cellVal.includes(filterVal);
+                        case 'not_contains': return !cellVal.includes(filterVal);
+                        case 'equals': return cellVal === filterVal;
+                        case 'not_equals': return cellVal !== filterVal;
+                        case 'is_empty': return cellVal === '';
+                        case 'is_not_empty': return cellVal !== '';
+                        default: return true;
+                    }
+                });
+            }
+        }
+
+        return result;
+    }, [cenas, filters]);
+
+    const youtubeLinks = useMemo(() => extractYoutubeLinks(visibleCenas), [visibleCenas]);
+    const allLinks = useMemo(() => extractAllLinks(visibleCenas), [visibleCenas]);
+
+    const showFeedback = useCallback((msg: string) => {
+        setExportFeedback(msg);
+        setExportOpen(false);
+        setTimeout(() => setExportFeedback(null), 2000);
+    }, []);
+
+    const handleCopyLinks = useCallback(async (links: string[]) => {
+        if (links.length === 0) return;
+        try {
+            await navigator.clipboard.writeText(links.join('\n'));
+            showFeedback('Copiado!');
+        } catch {
+            showFeedback('Erro ao copiar');
+        }
+    }, [showFeedback]);
+
+    const handleDownloadLinks = useCallback((links: string[], filename: string) => {
+        if (links.length === 0) return;
+        const blob = new Blob([links.join('\n')], { type: 'text/plain' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        showFeedback('Baixado!');
+    }, [showFeedback]);
+
+    const handleDownloadCsv = useCallback(() => {
+        if (visibleCenas.length === 0) return;
+        const escapeCsv = (val: string) => {
+            if (val.includes(',') || val.includes('"') || val.includes('\n')) {
+                return '"' + val.replace(/"/g, '""') + '"';
+            }
+            return val;
+        };
+
+        // Fixed columns with their keys and labels
+        const fixedDefs: { key: string; label: string }[] = [
+            { key: 'ordem', label: 'Cena' },
+            { key: 'roteiro', label: 'Roteiro' },
+            { key: 'comentario', label: 'Comentário' },
+            { key: 'tag', label: 'Tags' },
+            { key: 'status', label: 'Status' },
+            { key: 'obs', label: 'OBS' },
+        ];
+        const visibleFixed = fixedDefs.filter(d => !hiddenColumns.includes(d.key));
+        const visibleExtras = extraColumns.filter(col => !hiddenColumns.includes(col));
+
+        const header = [...visibleFixed.map(d => d.label), ...visibleExtras].map(escapeCsv).join(',');
+        const rows = visibleCenas.map(c => {
+            const fixedVals = visibleFixed.map(d => {
+                if (d.key === 'ordem') return String(c.ordem);
+                return String((c as unknown as Record<string, string>)[d.key] || '');
+            });
+            const extraVals = visibleExtras.map(col => c.extras?.[col] || '');
+            return [...fixedVals, ...extraVals].map(escapeCsv).join(',');
+        });
+        const csv = '\uFEFF' + [header, ...rows].join('\n');
+        const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'tabela-cenas.csv';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        showFeedback('CSV exportado!');
+    }, [visibleCenas, extraColumns, hiddenColumns, showFeedback]);
 
     const columns = useMemo(() => [
         { key: 'roteiro', label: 'Roteiro' },
@@ -291,10 +401,122 @@ export function Toolbar() {
 
             <span className="text-xs text-gruv-gray font-mono">{cenas.length} cenas</span>
 
-            <button className="flex items-center gap-2 px-3 py-1.5 rounded border border-gruv-bg-soft bg-gruv-bg hover:bg-gruv-bg-soft transition-colors text-gruv-fg4 text-xs font-medium disabled:opacity-50 disabled:cursor-not-allowed" disabled title="Em breve">
-                <Download size={16} />
-                Exportar
-            </button>
+            <div ref={exportRef} className="relative">
+                <button
+                    onClick={() => setExportOpen(!exportOpen)}
+                    className={`flex items-center gap-2 px-3 py-1.5 rounded border transition-colors text-xs font-medium
+                        ${exportOpen
+                            ? 'border-gruv-green bg-gruv-green/10 text-gruv-green'
+                            : 'border-gruv-bg-soft bg-gruv-bg hover:bg-gruv-bg-soft text-gruv-fg4'}`}
+                    title="Exportar dados"
+                >
+                    <Download size={16} />
+                    Exportar
+                    {allLinks.length > 0 && (
+                        <span className="ml-0.5 px-1.5 py-0.5 rounded-full bg-gruv-green text-gruv-bg text-[10px] font-bold leading-none">
+                            {allLinks.length}
+                        </span>
+                    )}
+                </button>
+
+                {exportOpen && (
+                    <div className="absolute top-full right-0 mt-1 bg-gruv-bg-hard border border-gruv-bg-soft rounded-xl shadow-2xl z-50 w-[260px] overflow-hidden flex flex-col">
+                        <div className="px-4 py-3 border-b border-gruv-bg-soft">
+                            <span className="text-xs font-bold text-gruv-fg2">Exportar</span>
+                        </div>
+                        <div className="px-2 py-2 space-y-0.5">
+                            {/* YouTube Links */}
+                            <div className="px-3 py-1.5 flex items-center gap-2 text-[10px] uppercase font-bold text-gruv-gray tracking-wide">
+                                <Youtube size={12} />
+                                Links YouTube
+                                {youtubeLinks.length > 0 && (
+                                    <span className="text-gruv-green font-mono">({youtubeLinks.length})</span>
+                                )}
+                            </div>
+                            <button
+                                onClick={() => handleCopyLinks(youtubeLinks)}
+                                disabled={youtubeLinks.length === 0}
+                                className="flex items-center gap-2.5 w-full px-3 py-2 rounded-lg text-xs transition-colors
+                                    text-gruv-fg hover:bg-gruv-bg-soft disabled:text-gruv-gray disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-transparent"
+                                title={youtubeLinks.length === 0 ? 'Nenhum link YouTube encontrado' : `Copiar ${youtubeLinks.length} link(s)`}
+                            >
+                                <Copy size={13} className="shrink-0" />
+                                Copiar para área de transferência
+                            </button>
+                            <button
+                                onClick={() => handleDownloadLinks(youtubeLinks, 'youtube-links.txt')}
+                                disabled={youtubeLinks.length === 0}
+                                className="flex items-center gap-2.5 w-full px-3 py-2 rounded-lg text-xs transition-colors
+                                    text-gruv-fg hover:bg-gruv-bg-soft disabled:text-gruv-gray disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-transparent"
+                                title={youtubeLinks.length === 0 ? 'Nenhum link YouTube encontrado' : `Baixar ${youtubeLinks.length} link(s) como .txt`}
+                            >
+                                <FileDown size={13} className="shrink-0" />
+                                Baixar como .txt
+                            </button>
+
+                            {/* Divider */}
+                            <div className="my-1 border-t border-gruv-bg-soft" />
+
+                            {/* All Links */}
+                            <div className="px-3 py-1.5 flex items-center gap-2 text-[10px] uppercase font-bold text-gruv-gray tracking-wide">
+                                <Link size={12} />
+                                Todos os Links
+                                {allLinks.length > 0 && (
+                                    <span className="text-gruv-blue font-mono">({allLinks.length})</span>
+                                )}
+                            </div>
+                            <button
+                                onClick={() => handleCopyLinks(allLinks)}
+                                disabled={allLinks.length === 0}
+                                className="flex items-center gap-2.5 w-full px-3 py-2 rounded-lg text-xs transition-colors
+                                    text-gruv-fg hover:bg-gruv-bg-soft disabled:text-gruv-gray disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-transparent"
+                                title={allLinks.length === 0 ? 'Nenhum link encontrado' : `Copiar ${allLinks.length} link(s)`}
+                            >
+                                <Copy size={13} className="shrink-0" />
+                                Copiar para área de transferência
+                            </button>
+                            <button
+                                onClick={() => handleDownloadLinks(allLinks, 'todos-links.txt')}
+                                disabled={allLinks.length === 0}
+                                className="flex items-center gap-2.5 w-full px-3 py-2 rounded-lg text-xs transition-colors
+                                    text-gruv-fg hover:bg-gruv-bg-soft disabled:text-gruv-gray disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-transparent"
+                                title={allLinks.length === 0 ? 'Nenhum link encontrado' : `Baixar ${allLinks.length} link(s) como .txt`}
+                            >
+                                <FileDown size={13} className="shrink-0" />
+                                Baixar como .txt
+                            </button>
+
+                            {/* Divider */}
+                            <div className="my-1 border-t border-gruv-bg-soft" />
+
+                            {/* CSV */}
+                            <div className="px-3 py-1.5 flex items-center gap-2 text-[10px] uppercase font-bold text-gruv-gray tracking-wide">
+                                <Table2 size={12} />
+                                Tabela
+                                {visibleCenas.length > 0 && (
+                                    <span className="text-gruv-orange font-mono">({visibleCenas.length} cenas)</span>
+                                )}
+                            </div>
+                            <button
+                                onClick={handleDownloadCsv}
+                                disabled={visibleCenas.length === 0}
+                                className="flex items-center gap-2.5 w-full px-3 py-2 rounded-lg text-xs transition-colors
+                                    text-gruv-fg hover:bg-gruv-bg-soft disabled:text-gruv-gray disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-transparent"
+                                title={visibleCenas.length === 0 ? 'Nenhuma cena visível' : `Exportar ${visibleCenas.length} cena(s) como CSV`}
+                            >
+                                <FileDown size={13} className="shrink-0" />
+                                Baixar como .csv
+                            </button>
+                        </div>
+                    </div>
+                )}
+
+                {exportFeedback && (
+                    <div className="absolute top-full right-0 mt-1 px-3 py-1.5 rounded-lg bg-gruv-green text-gruv-bg text-xs font-bold shadow-lg animate-pulse z-50">
+                        {exportFeedback}
+                    </div>
+                )}
+            </div>
         </div>
     );
 }
